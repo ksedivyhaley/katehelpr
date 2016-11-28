@@ -1,6 +1,6 @@
 tidy_pol <- function(file) {
 
-  data <- read_csv(file)
+  data <- readr::read_csv(file)
 
   #testing for numeric data - fails downstream otherise
   numeric_cols <- sum(sapply(data, is.numeric))
@@ -19,6 +19,6 @@ tidy_pol <- function(file) {
   }
 
   data %>%
-    gather(key = "stim", value = "response") %>%
-    separate(stim, into=c("polarization", "secondary"), sep="-")
+    tidyr::gather(key = "stim", value = "response") %>%
+    tidyr::separate(stim, into=c("polarization", "secondary"), sep="-")
 }
