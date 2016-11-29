@@ -1,6 +1,27 @@
-tidy_pol <- function(file) {
-
-  data <- readr::read_csv(file)
+#' Tidy Polarization Data
+#'
+#' Takes data frame where each column represents a treatment group
+#' with the first row being treatment names in form
+#' polarization-secondary (eg 'Ctrl-LPS') and subsequent rows
+#' containing individual observations. Returns tidied tibble
+#' with columns polarization <chr>, secondary <chr> and
+#' response <int>
+#'
+#' @param data data frame
+#'
+#' @return tibble
+#' @export
+#' @importFrom magrittr %>%
+#'
+#' @examples
+#' data <- tibble::tibble(
+#' 'Ctrl-Ctrl' = 1:3,
+#' 'M1-Ctrl'= 1:3,
+#' 'Ctrl-LPS' = 4:6,
+#' 'M1-LPS' = 11:13
+#' )
+#' tidy_pol(data)
+tidy_pol <- function(data) {
 
   #testing for numeric data - fails downstream otherise
   numeric_cols <- sum(sapply(data, is.numeric))
