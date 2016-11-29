@@ -1,12 +1,22 @@
 Package: katehelpr
-Title: What the Package Does (one line, title case)
+Title: Functions for Studying Macrophage Polarization
 Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-Depends: R (>= 3.3.1)
-License: What license is it under?
+Authors@R: person("Katharine", "Sedivy-Haley", 
+    email = "ksedivyhaley@gmail.com", role = c("aut", "cre"))
+Description: This package provides functions for my PhD research on
+    macrophage alternate activation ("polarization"). In some experiments,
+    a polarizing prestimulation is followed by a secondary stimulation, and
+    the effect of polarization on response to the secondary stimulation is
+    of interest. The package defines functions to tidy data from my usual 
+    human-friendly format, perform statistical analysis determining 
+    statistical significance of changes in response compared to a control 
+    polarization, and make a bar plot including these statistical summaries.
+Depends:
+    R (>= 3.3.1)
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Imports: readr,
+Imports:
     tidyr,
     magrittr
+RoxygenNote: 5.0.1
