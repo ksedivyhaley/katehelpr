@@ -19,6 +19,10 @@ LazyData: true
 Imports:
     tidyr,
     magrittr,
-    tibble
+    tibble,
+    dplyr,
+    purrr,
+    broom,
+    ggplot2
 RoxygenNote: 5.0.1
 Suggests: testthat

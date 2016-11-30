@@ -2,30 +2,30 @@
 % Please edit documentation in R/tidy_pol.R
 \name{tidy_pol}
 \alias{tidy_pol}
-\title{Tidy Polarization Data}
+\title{Tidy Primary-Secondary Data}
 \usage{
 tidy_pol(data)
 }
 \arguments{
-\item{data}{data frame}
+\item{data}{data.frame where each column represents a treatment group,
+the first row contains treatment names in form primary-secondary
+(eg 'Ctrl-LPS'), and subsequent rows contain individual observations.}
 }
 \value{
-tibble
+tibble with columns primary <chr>, secondary <chr> and
+response <int> or <dbl>
 }
 \description{
-Takes data frame where each column represents a treatment group
-with the first row being treatment names in form
-polarization-secondary (eg 'Ctrl-LPS') and subsequent rows
-containing individual observations. Returns tidied tibble
-with columns polarization <chr>, secondary <chr> and
-response <int>
+Takes a data.frame or tibble in a specific human-friendly format
+and tidies it into the conventional format suitable for use with
+analyse_pol()
 }
 \examples{
 data <- tibble::tibble(
-'Ctrl-Ctrl' = 1:3,
-'M1-Ctrl'= 1:3,
-'Ctrl-LPS' = 4:6,
-'M1-LPS' = 11:13
+  'Ctrl-Ctrl' = 1:3,
+  'M1-Ctrl'= 4:6,
+  'Ctrl-LPS' = 4:6,
+  'M1-LPS' = 11:13
 )
 tidy_pol(data)
 }
