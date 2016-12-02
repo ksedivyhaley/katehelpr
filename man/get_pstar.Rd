@@ -7,7 +7,7 @@
 get_pstar(pval)
 }
 \arguments{
-\item{pval}{double: between 0 and 1. Note function is not currently vectorized.}
+\item{pval}{double, or vector of doubles: between 0 and 1}
 }
 \value{
 factor: "" "*" "**" or "***"
@@ -23,7 +23,6 @@ p > 0.05          : ""
 get_pstar(0.8)
 get_pstar(0.05)
 get_pstar(0.00002)
-get_pstar(1.2) #produces error
-get_pstar(c(0.8, 0.05, 0.0002)) #produces warning, uses 0.8
+get_pstar(c(0.8, 0.05, 0.0002))
 }
 
