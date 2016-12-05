@@ -1,0 +1,70 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
+
+### katehelpr
+
+katehelpr can be used to analyse any data in which observations are described by a primary and secondary categorical variable, and a numeric measurement or "response". Within groups defined by the secondary variable, it compares observations with different primary variables to a reference group.
+
+For example, it could be used to analyze the weight (response) of different mouse mutants (primary variable) compared to the wild-type (reference) when fed different diets (secondary variable).
+
+The package was designed to analyse macrophage alternative activation states (aka polarization), so function names include 'pol()' and the default primary label for the plot is "Polarization."
+
+### Installation
+
+```{r installation, eval = FALSE}
+devtools::install_github("ksedivyhaley/katehelpr")
+```
+  
+### Demo
+
+```{r}
+suppressPackageStartupMessages(library(dplyr))
+library(katehelpr)
+```
+
+It is often convenient to collect data in a format like this, for human readability:
+
+```{r}
+(data <- tibble(
+   'WT-Diet1' = 1:3,
+   'Mutant-Diet1'= 4:6,
+   'WT-Diet2' = 4:6,
+   'Mutant-Diet2' = 11:13
+))
+```
+
+katehelpr can tidy this data and obtain statistical summaries, comparing the mutant to the WT for each diet:
+
+```{r}
+(analysed <- data %>%
+  tidy_pol() %>%
+  analyse_pol(reference="WT")
+)
+```
+
+...and then use this data to plot a bar graph.
+
+```{r "Plot"}
+plot_pol(analysed, xlab="Genotype", ylab="Weight (g)", label="p.star")
+```
+
+A helper function get_pstar() can translate p-values into star symbols.
+
+```{r}
+mutate(analysed, p.star = get_pstar(p.value))
+```
+
+
+For more detail, see `browseVignettes("katehelpr")`

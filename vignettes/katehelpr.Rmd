@@ -33,14 +33,8 @@ In total, the functions are designed to form a pipeline from raw untidy data to 
 
 ```{r, warning=FALSE, fig.show='hold'}
 
-read_example <- function (path) {
-  system.file("extdata", path, package = "katehelpr", mustWork = TRUE)
-}
-
-file1 <-  read_example("test.csv")
-file2 <-  read_example("test2.csv")
-
-list.files(gsub("/test.csv", "/", file1))
+file1 <-  system.file("extdata", "test.csv", package = "katehelpr")
+file2 <-  system.file("extdata", "test2.csv", package = "katehelpr")
 
 read.csv(file1) %>%
   tidy_pol(sep="\\.") %>%
