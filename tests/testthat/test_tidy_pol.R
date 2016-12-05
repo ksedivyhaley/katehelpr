@@ -1,7 +1,7 @@
 context("Tidying data with tidy_pol")
 
 
-test_that("tidy_pol tidies a data set", {
+test_that("tidy_pol tidies a data set with separator", {
 
   data <- tibble::tibble(
    'Ctrl-Ctrl' = 1:3,
@@ -9,6 +9,14 @@ test_that("tidy_pol tidies a data set", {
    'Ctrl-LPS' = 4:6,
    'M1-LPS' = 11:13
    )
+
+  data2 <- tibble::tibble(
+    'Ctrl.Ctrl' = 1:3,
+    'M1.Ctrl'= 1:3,
+    'Ctrl.LPS' = 4:6,
+    'M1.LPS' = 11:13
+  )
+
   tidy <- tibble::tibble(
     'primary' = rep(rep(c("Ctrl", "M1"), each=3), 2),
     'secondary'= rep(c("Ctrl", "LPS"), each=6),
@@ -16,6 +24,7 @@ test_that("tidy_pol tidies a data set", {
   )
 
   expect_identical(tidy_pol(data), tidy)
+  expect_identical(tidy_pol(data2, sep="\\."), tidy)
 })
 
 test_that("tidy_pol produces error for non-numeric data", {

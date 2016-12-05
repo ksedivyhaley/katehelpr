@@ -1,0 +1,142 @@
+---
+title: "katehelpr for Two-Variable Data Analysis"
+author: "Katharine Sedivy-Haley"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    keep_md: true
+vignette: >
+  %\VignetteIndexEntry{katehelpr for Two-Variable Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This package can be used to analyse any data in which observations are described by a primary and secondary categorical variable, and a numeric measurement or "response". Within groups defined by the secondary variable, it compares observations with different primary variables to a reference group.
+
+For example, it could be used to analyze
+
+| response       | primary        |  reference  | secondary     |
+|----------------|----------------|-------------|---------------|
+| weight of  |  mouse mutants  | vs wild-type     |  when fed different diets    |
+| inflammatory response of  |  alternatively activated macrophages  | vs default state    |  when stimulated with a variety of threat signals    |
+| lifespan of  | people in different countries  | compared to Canada    |  by gender    |
+
+```{r}
+suppressPackageStartupMessages(library(dplyr))
+library(katehelpr)
+```
+
+## The Analysis Pipeline
+
+In total, the functions are designed to form a pipeline from raw untidy data to a finished plot, like so:
+
+```{r, warning=FALSE, fig.show='hold'}
+
+read_example <- function (path) {
+  system.file("extdata", path, package = "katehelpr", mustWork = TRUE)
+}
+
+file1 <-  read_example("test.csv")
+file2 <-  read_example("test2.csv")
+
+list.files(gsub("/test.csv", "/", file1))
+
+read.csv(file1) %>%
+  tidy_pol(sep="\\.") %>%
+  analyse_pol() %>%
+  plot_pol(ylab="Inflammation", label="p.star")
+
+read.csv(file2) %>%
+  tidy_pol(sep="\\.") %>%
+  analyse_pol(reference="WT") %>%
+  plot_pol(xlab="Genotype", ylab="Weight (g)", label="p.value")
+```
+
+
+
+## tidy_pol(): Tidy Data
+
+tidy_pol() automates the tidying of data from a specific human-friendly format. To use tidy_pol(), observations from each combination of primary and secondary variables should be in columns, with column names in the format 'primary-secondary.' Alternate separator characters can be specified, but be sure to escape characters if necessary.
+
+**Usage:** `tidy_pol(data, sep="-")` where `data` is a data frame and `sep` is a string containing a regular expression.
+
+
+```{r}
+(data <- tibble(
+   'Ctrl-Ctrl' = 1:3,
+   'M1-Ctrl'= 4:6,
+   'Ctrl-LPS' = 4:6,
+   'M1-LPS' = 11:13
+))
+
+(tidy <- tidy_pol(data))
+
+(diff_sep <- tibble(
+   'Ctrl.Ctrl' = 1:3,
+   'M1.Ctrl'= 4:6,
+   'Ctrl.LPS' = 4:6,
+   'M1.LPS' = 11:13
+))
+
+tidy_pol(diff_sep, sep="\\.") #separator character is "."
+```
+
+
+## analyse_pol(): Get Statistical Summaries
+
+`analyse_pol()` takes a data.frame with observations from multiple primary-secondary conditions and calculates the mean and standard deviation for each primary-secondary group. It also performs a t.test on each group relative to the reference primary group with the same secondary stimulation.
+
+**Usage:** `analyse_pol(df, reference = "Ctrl", na.rm = TRUE)` where
+
+- `df` is a data.frame (or tibble) containing character columns 'primary' and 'secondary', and numeric column 'response'
+- `reference` is a string matching a reference level within the primary variable of df
+- `na.rm` is a logical passed to mean() and sd() to tell them whether to ignore NA values.
+
+```{r}
+head(tidy) #from tidy_pol()
+
+(analysed <- analyse_pol(tidy))
+
+analyse_pol(tidy, reference="M1") #note p-values for M1 groups now = 1
+```
+
+## plot_pol(): Plot the Data
+
+`plot pol()` produces a bar graph with the primary variable being represented as facets and the secondary variable represented by position along the x-axis and colour. Group mean is plotted, along with error bars representing the standard deviation and an optional label indicating statistical significance (numeric p-value or stars, see get_pstar). Axis labels may be customised to represent the specific data used.
+
+**Usage:** `plot_pol(df, xlab = "Polarization", ylab="Response", label=NULL)` where 
+
+- `df` is a data frame containing columns "primary", "secondary", "mean", and "sd", as well as an optional p.value or p.star column if labels used.
+- `xlab` is a string specifying the x axis label (name of the type of observation of the primary variable eg mutation).
+- `ylab` is a string specifying the y axis label (name of response measured).
+- `label` is a string specifying a label to be applied to the bars. p.value and p.star values are currently supported - if an unrecognized type is given the bar graph will be unlabelled. If only a p.value can be found, p.star can be derived within the function. 
+
+
+```{r, fig.show='hold'}
+plot_pol(analysed)
+
+plot_pol(analysed, ylab="Inflammation", label="p.star")
+```
+
+
+## get_pstar(): Translate p-values to Star Symbols
+
+A helper function that translates a numeric p-value into a significance symbol (of type `factor`) according to
+
+ $$0.05 < p           = '~' $$
+ $$0.01 \le p < 0.05  =  *  $$
+ $$0.001 \le p < 0.05 = ** $$
+ $$p < 0.001          =  ***  $$
+
+Within the expected workflow, get_pstar() is called within plot_pol() and not by the programmer. However, it is possible to use get_pstar() without plot_pol() if you wish to produce alternative graphs.
+
+**Usage:** `get_pstar(pval)` where `pval` is the p-value or vector of p-values (doubles between 0 and 1).
+
+```{r}
+get_pstar(0.05)
+get_pstar(c(0.0002, 0.8, 0.05))
+
+analysed %>%
+  mutate(p.star = get_pstar(p.value))
+```

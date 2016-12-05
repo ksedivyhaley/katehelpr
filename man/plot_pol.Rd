@@ -37,7 +37,7 @@ df <- tibble::tibble(
   'secondary'= c("Ctrl", "Ctrl", "M1", "M1"),
   'mean' = c(2, 5, 5, 12),
   'sd' = c(1, 1, 1.414, 1),
-  'p.value' = c(1, 0.21, 1, 0.38)
+  'p.value' = c(1, 0.21, 1, 0.04)
 )
 plot_pol(df)
 plot_pol(df, ylab="Inflammation", label="p.value")

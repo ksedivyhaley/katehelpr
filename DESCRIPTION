@@ -1,16 +1,15 @@
 Package: katehelpr
-Title: Functions for Studying Macrophage Polarization
+Title: Tools for Analysis of Two-Variable Data
 Version: 0.0.0.9000
 Authors@R: person("Katharine", "Sedivy-Haley", 
     email = "ksedivyhaley@gmail.com", role = c("aut", "cre"))
-Description: This package provides functions for my PhD research on
-    macrophage alternate activation ("polarization"). In some experiments,
-    a polarizing prestimulation is followed by a secondary stimulation, and
-    the effect of polarization on response to the secondary stimulation is
-    of interest. The package defines functions to tidy data from my usual 
-    human-friendly format, perform statistical analysis determining 
-    statistical significance of changes in response compared to a control 
-    polarization, and make a bar plot including these statistical summaries.
+Description: This package can be used to analyse any data in which observations are
+   described by a primary and secondary categorical variable, and a numeric 
+   measurement or "response". Within groups defined by the secondary variable, 
+   it compares observations with different primary variables to a reference group. 
+   For example, the package could be used to compare mouse weights (response) when 
+   mice are fed different diets (secondary variable), comparing mutant mice to wild 
+   type (primary variable with reference level).
 Depends:
     R (>= 3.3.1)
 License: MIT + file LICENSE
@@ -25,4 +24,7 @@ Imports:
     broom,
     ggplot2
 RoxygenNote: 5.0.1
-Suggests: testthat
+Suggests: testthat,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

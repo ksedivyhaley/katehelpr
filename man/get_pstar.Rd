@@ -14,10 +14,10 @@ factor: "" "*" "**" or "***"
 }
 \description{
 Translates a numeric p-value into a significance symbol according to
-p > 0.05          : ""
-0.05 <= p < 0.01  : "*"
-0.01 <= p < 0.001 : "**"
-0.001 <= p        : "***"
+0.05 < p          : ""
+0.01 <= p < 0.05  : "*"
+0.001 <= p < 0.05 : "**"
+p < 0.001         : "***"
 }
 \examples{
 get_pstar(0.8)

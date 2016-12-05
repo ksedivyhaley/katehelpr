@@ -7,7 +7,7 @@ test_that("Correct analysis performed",{
     'secondary'= rep(c("Ctrl", "LPS"), each=6),
     'response' = c(1, 2, 3, 4, 5, 6, 4, 5, 6, 11, 12, 13) ) %>%
     analyse_pol() %>%
-    mutate(p.value = round(p.value, 4)) #otherwise can't get pvalue within margin
+    dplyr::mutate(p.value = round(p.value, 4)) #otherwise can't get pvalue within margin
 
   expected <- tibble::tibble(
     'primary' = rep(c("Ctrl", "M1"), 2),
@@ -16,9 +16,8 @@ test_that("Correct analysis performed",{
     'sd' = c(1, 1, 1, 1),
     'p.value' = c(1, 0.0213, 1, 0.0010)
   )
-  expect_identical(analysed$primary, expected$primary)
-  expect_identical(analysed$secondary, expected$secondary)
-  expect_identical(analysed$p.value, expected$p.value)
+
+  expect_identical(analysed, expected)
 })
 
 test_that("NA handling works",{
@@ -28,7 +27,7 @@ test_that("NA handling works",{
     'secondary'= rep(c("Ctrl", "LPS"), each=6),
     'response' = c(1, 2, 3, 4, NA, 6, 4, 5, 6, 11, 12, 13) ) %>%
     analyse_pol() %>%
-    mutate(sd = round(sd, 4),
+    dplyr::mutate(sd = round(sd, 4),
       p.value = round(p.value, 4))
 
   expected_default <- tibble::tibble(
@@ -44,7 +43,7 @@ test_that("NA handling works",{
     'secondary'= rep(c("Ctrl", "LPS"), each=6),
     'response' = c(1, 2, 3, 4, NA, 6, 4, 5, 6, 11, 12, 13) ) %>%
     analyse_pol(na.rm=FALSE) %>%
-    mutate(sd = round(sd, 4),
+    dplyr::mutate(sd = round(sd, 4),
            p.value = round(p.value, 4))
 
   expected_NA <- tibble::tibble(
@@ -66,7 +65,7 @@ test_that("Alternate reference can be set",{
        'secondary'= rep(c("Diet1", "Diet2"), each=6),
        'response' = c(1, 2, 3, 4, 5, 6, 4, 5, 6, 11, 12, 13) ) %>%
     analyse_pol(reference = "WT") %>%
-    mutate(p.value = round(p.value, 4))
+    dplyr::mutate(p.value = round(p.value, 4))
 
   alt_ref_expected <- tibble::tibble(
     'primary' = rep(c("WT", "Mutant"), 2),

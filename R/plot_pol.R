@@ -69,7 +69,7 @@ plot_pol <- function(df, xlab = "Polarization",
   #otherwise can't add p.star to the data for ggplot
   if(label=="p.star" && !label_present && ("p.value" %in% colnames(df))){
     df <- df %>%
-      dplyr::mutate(p.star = sapply(p.value, get_pstar))
+      dplyr::mutate(p.star = get_pstar(p.value))
     label_present <- (label %in% colnames(df)) #should now be present
   }
 

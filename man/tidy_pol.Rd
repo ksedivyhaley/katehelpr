@@ -4,12 +4,15 @@
 \alias{tidy_pol}
 \title{Tidy Primary-Secondary Data}
 \usage{
-tidy_pol(data)
+tidy_pol(data, sep = "-")
 }
 \arguments{
 \item{data}{data.frame where each column represents a treatment group,
 the first row contains treatment names in form primary-secondary
 (eg 'Ctrl-LPS'), and subsequent rows contain individual observations.}
+
+\item{sep}{string: separator character, default "-". Uses regular
+expressions, so be careful! For example, "." must be input as "\\."}
 }
 \value{
 tibble with columns primary <chr>, secondary <chr> and
@@ -28,5 +31,13 @@ data <- tibble::tibble(
   'M1-LPS' = 11:13
 )
 tidy_pol(data)
+
+data2 <- tibble::tibble(
+  'Ctrl.Ctrl' = 1:3,
+  'M1.Ctrl'= 4:6,
+  'Ctrl.LPS' = 4:6,
+  'M1.LPS' = 11:13
+)
+tidy_pol(data2, sep="\\\\.")
 }
 

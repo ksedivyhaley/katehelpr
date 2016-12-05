@@ -7,6 +7,8 @@
 #' @param data data.frame where each column represents a treatment group,
 #' the first row contains treatment names in form primary-secondary
 #' (eg 'Ctrl-LPS'), and subsequent rows contain individual observations.
+#' @param sep string: separator character, default "-". Uses regular
+#' expressions, so be careful! For example, "." must be input as "\\."
 #'
 #' @return tibble with columns primary <chr>, secondary <chr> and
 #' response <int> or <dbl>
@@ -21,7 +23,15 @@
 #'   'M1-LPS' = 11:13
 #' )
 #' tidy_pol(data)
-tidy_pol <- function(data) {
+#'
+#' data2 <- tibble::tibble(
+#'   'Ctrl.Ctrl' = 1:3,
+#'   'M1.Ctrl'= 4:6,
+#'   'Ctrl.LPS' = 4:6,
+#'   'M1.LPS' = 11:13
+#' )
+#' tidy_pol(data2, sep="\\.")
+tidy_pol <- function(data, sep="-") {
 
   #testing for numeric data - fails downstream otherise
   numeric_cols <- sum(sapply(data, is.numeric))
@@ -31,9 +41,9 @@ tidy_pol <- function(data) {
   }
 
   #test that column names have expected separator character
-  names_no_sep <- !sapply(colnames(data), function(name) grepl("-", name))
+  names_no_sep <- !sapply(colnames(data), function(name) grepl(sep, name))
   if(sum(names_no_sep) != 0){
-    stop("Column names must contain separator '-'; column(s) ",
+    stop("Column names must contain separator ", sep, "; column(s) ",
          which(names_no_sep),
          "'", names(names_no_sep)[names_no_sep], "'",
          " do/does not.")
@@ -41,5 +51,5 @@ tidy_pol <- function(data) {
 
   data %>%
     tidyr::gather(key = "stim", value = "response") %>%
-    tidyr::separate(stim, into=c("primary", "secondary"), sep="-")
+    tidyr::separate(stim, into=c("primary", "secondary"), sep=sep)
 }
