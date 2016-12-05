@@ -28,3 +28,5 @@ Suggests: testthat,
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+URL: https://github.com/ksedivyhaley/katehelpr
+BugReports: https://github.com/ksedivyhaley/katehelpr/issues
